@@ -1,0 +1,27 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 8083
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
+COPY ["Articium.Review.Api/Articium.Review.Api.csproj", "src/Articium.Review.Api/"]
+COPY ["Articium.Services/Articium.Services.csproj", "src/Articium.Services/"]
+COPY ["Articium.Utils/Articium.Utils.csproj", "src/Articium.Utils/"]
+COPY ["Articium.Clients/Articium.Clients.csproj", "src/Articium.Clients/"]
+COPY ["Articium.DbConnector/Articium.DbConnector.csproj", "src/Articium.DbConnector/"]
+COPY ["Articium.EventServices/Articium.EventServices.csproj", "src/Articium.EventServices/"]
+
+RUN dotnet restore "src/Articium.Review.Api/Articium.Review.Api.csproj"
+COPY . .
+
+WORKDIR "/src/Articium.Review.Api"
+
+RUN dotnet build "Articium.Review.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Articium.Review.Api.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Articium.Review.Api.dll"]

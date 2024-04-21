@@ -1,0 +1,23 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 8080
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY ["Articium.Gateway/Articium.Gateway.csproj", "src/Articium.Gateway/"]
+
+RUN dotnet restore "src/Articium.Gateway/Articium.Gateway.csproj"
+COPY . .
+
+WORKDIR "/src/Articium.Gateway"
+
+RUN dotnet build "Articium.Gateway.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Articium.Gateway.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Articium.Gateway.dll"]

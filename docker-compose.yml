@@ -1,0 +1,122 @@
+﻿version: '3.7'
+
+services:
+  gateway:
+    build:
+      context: ./src/
+      dockerfile: gateway-dockerfile
+    restart: on-failure
+    ports:
+      - "8080:80"
+    networks:
+      - inner_network
+    depends_on:
+      - varnish-server
+      - user-api
+      - article-api
+      - review-api
+
+  varnish-server:
+    image: varnish:latest
+    networks:
+      - inner_network
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./docs/default.vcl:/etc/varnish/default.vcl
+
+  user-api:
+    build:
+      context: ./src/
+      dockerfile: user-api-dockerfile
+    restart: on-failure
+    depends_on:
+      - postgres
+      - elasticsearch
+    ports:
+      - "8084:8084"
+    networks:
+      - inner_network
+
+  article-api:
+    build:
+      context: ./src/
+      dockerfile: article-api-dockerfile
+    restart: on-failure
+    depends_on:
+      - postgres
+      - elasticsearch
+    ports:
+      - "8082:8082"
+    networks:
+      - inner_network
+
+  review-api:
+    build:
+      context: ./src/
+      dockerfile: article-api-dockerfile
+    restart: on-failure
+    depends_on:
+      - postgres
+      - elasticsearch
+    ports:
+      - "8083:8083"
+    networks:
+      - inner_network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - inner_network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.7.1
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://localhost:9200
+      - xpack.security.enabled=false
+    networks:
+      - inner_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5051:5051"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "postgres@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"
+    networks:
+      - inner_network
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: articium
+    volumes:
+      - ./docs/articium.sql:/docker-entrypoint-initdb.d/articium.sql
+    entrypoint: 
+      - docker-entrypoint.sh
+      - postgres
+    networks:
+      - inner_network
+
+networks:
+  inner_network:
+
+volumes:
+  elasticsearch-data:
+    driver: local

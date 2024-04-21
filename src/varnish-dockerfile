@@ -1,0 +1,3 @@
+﻿FROM varnish:latest
+
+COPY /docs/default.vcl /etc/varnish/default.vcl
