@@ -1,7 +1,6 @@
 ﻿using Articium.DbConnector.Models;
 using Articium.Services.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]

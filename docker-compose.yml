@@ -3,8 +3,8 @@
 services:
   gateway:
     build:
-      context: ./src/
-      dockerfile: gateway-dockerfile
+      context: .
+      dockerfile: src/gateway-dockerfile
     restart: on-failure
     ports:
       - "8080:80"
@@ -27,8 +27,8 @@ services:
 
   user-api:
     build:
-      context: ./src/
-      dockerfile: user-api-dockerfile
+      context: .
+      dockerfile: src/user-api-dockerfile
     restart: on-failure
     depends_on:
       - postgres
@@ -40,8 +40,8 @@ services:
 
   article-api:
     build:
-      context: ./src/
-      dockerfile: article-api-dockerfile
+      context: .
+      dockerfile: src/article-api-dockerfile
     restart: on-failure
     depends_on:
       - postgres
@@ -53,8 +53,8 @@ services:
 
   review-api:
     build:
-      context: ./src/
-      dockerfile: article-api-dockerfile
+      context: .
+      dockerfile: src/article-api-dockerfile
     restart: on-failure
     depends_on:
       - postgres
@@ -108,7 +108,7 @@ services:
       POSTGRES_DB: articium
     volumes:
       - ./docs/articium.sql:/docker-entrypoint-initdb.d/articium.sql
-    entrypoint: 
+    entrypoint:
       - docker-entrypoint.sh
       - postgres
     networks:
@@ -116,6 +116,7 @@ services:
 
 networks:
   inner_network:
+
 
 volumes:
   elasticsearch-data:

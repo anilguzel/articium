@@ -4,12 +4,12 @@ EXPOSE 8084
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
-COPY ["Articium.User.Api/Articium.User.Api.csproj", "src/Articium.User.Api/"]
-COPY ["Articium.Services/Articium.Services.csproj", "src/Articium.Services/"]
-COPY ["Articium.Clients/Articium.Clients.csproj", "src/Articium.Clients/"]
-COPY ["Articium.DbConnector/Articium.DbConnector.csproj", "src/Articium.DbConnector/"]
-COPY ["Articium.EventServices/Articium.EventServices.csproj", "src/Articium.EventServices/"]
-COPY ["Articium.Utils/Articium.Utils.csproj", "src/Articium.Utils/"]
+COPY ["/src/Articium.User.Api/Articium.User.Api.csproj", "src/Articium.User.Api/"]
+COPY ["/src/Articium.Services/Articium.Services.csproj", "src/Articium.Services/"]
+COPY ["/src/Articium.Clients/Articium.Clients.csproj", "src/Articium.Clients/"]
+COPY ["/src/Articium.DbConnector/Articium.DbConnector.csproj", "src/Articium.DbConnector/"]
+COPY ["/src/Articium.EventServices/Articium.EventServices.csproj", "src/Articium.EventServices/"]
+COPY ["/src/Articium.Utils/Articium.Utils.csproj", "src/Articium.Utils/"]
 
 RUN dotnet restore "src/Articium.User.Api/Articium.User.Api.csproj"
 COPY . .
