@@ -54,7 +54,7 @@ services:
   review-api:
     build:
       context: .
-      dockerfile: src/article-api-dockerfile
+      dockerfile: src/review-api-dockerfile
     restart: on-failure
     depends_on:
       - postgres
