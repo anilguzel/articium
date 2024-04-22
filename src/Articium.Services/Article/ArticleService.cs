@@ -44,10 +44,7 @@ public class ArticleService : IArticleService
         if (article == null)
             return null;
 
-        article.Title = request.Title;
-        article.Author = request.Author;
-        article.ArticleContent = request.ArticleContent;
-        article.StarCount = request.StarCount;
+        article.Update(request.Title, request.ArticleContent, request.StarCount);
 
         _dbContext.Update(article);
         await _dbContext.SaveChangesAndInvalidateCacheAsync<Article>();

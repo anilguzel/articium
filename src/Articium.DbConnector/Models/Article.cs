@@ -16,5 +16,13 @@ public class Article : TEntity
     public string ArticleContent { get; set; }
     public DateTime PublishDate { get; set; }
     public int StarCount { get; set; }
+
+    public void Update(string title, string articleContent, int starCount)
+    {
+        // check validations or sth
+        this.Title = title;
+        this.ArticleContent = articleContent;
+        this.StarCount = starCount;
+    }
 }
 
