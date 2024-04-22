@@ -11,11 +11,11 @@ public class Article : TEntity
         StarCount = starCount;
     }
 
-    public string Title { get; set; }
-    public string Author { get; set; }
-    public string ArticleContent { get; set; }
-    public DateTime PublishDate { get; set; }
-    public int StarCount { get; set; }
+    public string Title { get; private set; }
+    public string Author { get; private set; }
+    public string ArticleContent { get; private set; }
+    public DateTime PublishDate { get; private set; }
+    public int StarCount { get; private set; }
 
     public void Update(string title, string articleContent, int starCount)
     {
